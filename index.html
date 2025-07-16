@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Verification System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .logo {
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .logo p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .scan-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .scan-icon {
+            width: 120px;
+            height: 120px;
+            background: #f0f7ff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 25px;
+            color: #3498db;
+            font-size: 50px;
+            border: 3px dashed #3498db;
+        }
+        
+        .scan-section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .scan-section p {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .scan-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .scan-btn:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+            animation: modalAppear 0.5s ease;
+        }
+        
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: #e74c3c;
+            transform: rotate(90deg);
+        }
+        
+        .verification-badge {
+            width: 100px;
+            height: 100px;
+            background: #e8f7f0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            color: #2ecc71;
+            font-size: 45px;
+            border: 3px solid #2ecc71;
+        }
+        
+        .modal h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .success-text {
+            color: #2ecc71;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .certificate-details {
+            background: #f9f9f9;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: left;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            width: 40%;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            width: 60%;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .download-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .download-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .download-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .download-certificate .download-icon {
+            color: #3498db;
+        }
+        
+        .download-details .download-icon {
+            color: #9b59b6;
+        }
+        
+        .download-btn span {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 480px) {
+            .download-options {
+                flex-direction: column;
+            }
+            
+            .scan-section, .modal-content {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1><i class="fas fa-certificate"></i> CertVerify</h1>
+            <p>Certificate Verification System</p>
+        </div>
+        
+        <div class="scan-section">
+            <div class="scan-icon">
+                <i class="fas fa-qrcode"></i>
+            </div>
+            <h2>Verify Certificate</h2>
+            <p>Scan the QR code from your certificate to verify its authenticity and download digital copies.</p>
+            <button id="scanBtn" class="scan-btn">
+                <i class="fas fa-camera"></i> Simulate QR Scan
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 CertVerify. All rights reserved.</p>
+        </div>
+    </div>
+    
+    <!-- Verification Modal -->
+    <div id="verificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            
+            <div class="verification-badge">
+                <i class="fas fa-check"></i>
+            </div>
+            
+            <h2>Certificate Verified</h2>
+            <p class="success-text">This certificate is valid and authentic</p>
+            
+            <div class="certificate-details">
+                <div class="detail-item">
+                    <div class="detail-label">Certificate ID:</div>
+                    <div class="detail-value">CV-2023-78945</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Issued To:</div>
+                    <div class="detail-value">Alex Johnson</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Certificate Type:</div>
+                    <div class="detail-value">Web Development Mastery</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Issue Date:</div>
+                    <div class="detail-value">July 15, 2023</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Expiration Date:</div>
+                    <div class="detail-value">July 15, 2026</div>
+                </div>
+            </div>
+            
+            <div class="download-options">
+                <div class="download-btn download-certificate" id="downloadCert">
+                    <div class="download-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span>Download Certificate</span>
+                </div>
+                
+                <div class="download-btn download-details" id="downloadDetails">
+                    <div class="download-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <span>Download Report</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const scanBtn = document.getElementById('scanBtn');
+        const verificationModal = document.getElementById('verificationModal');
+        const closeModal = document.getElementById('closeModal');
+        const downloadCert = document.getElementById('downloadCert');
+        const downloadDetails = document.getElementById('downloadDetails');
+        
+        // Simulate QR scan - show verification modal
+        scanBtn.addEventListener('click', () => {
+            verificationModal.style.display = 'flex';
+        });
+        
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            verificationModal.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside content
+        window.addEventListener('click', (e) => {
+            if (e.target === verificationModal) {
+                verificationModal.style.display = 'none';
+            }
+        });
+        
+        // Download handlers (simulated)
+        downloadCert.addEventListener('click', () => {
+            alert('Certificate download started! In a real implementation, this would download the PDF certificate.');
+        });
+        
+        downloadDetails.addEventListener('click', () => {
+            alert('Report download started! In a real implementation, this would download the verification report.');
+        });
+        
+        // Simulate QR scan on page load for demo purposes
+        window.addEventListener('load', () => {
+            // For demo, we'll auto-scan after a short delay
+            setTimeout(() => {
+                // Only auto-scan if modal isn't already open
+                if(verificationModal.style.display !== 'flex') {
+                    scanBtn.click();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
